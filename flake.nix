@@ -12,10 +12,25 @@
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          # Override Python packages to ensure consistent versions
+          overlays = [
+            (self: super: {
+              pythonPackagesExtensions = super.pythonPackagesExtensions ++ [
+                (python-final: python-prev: {
+                  torch-bin = python-prev.torch-bin;
+                  accelerate = python-prev.accelerate.override {
+                    torch = python-final.torch-bin;
+                  };
+                })
+              ];
+            })
+          ];
         };
 
         pythonEnv = pkgs.python3.withPackages (ps: with ps; [
           torch-bin
+          transformers
+          accelerate
         ]);
 
       in

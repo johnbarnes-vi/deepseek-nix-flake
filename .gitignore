@@ -1,0 +1,18 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!flake.nix
+!flake.lock
+!readme.md
+!.envrc
+
+# And not the src directory...
+!src/
+!src/**
+
+# Still ignore Python compilation files even in src
+src/**/__pycache__/
+src/**/*.py[cod]
+src/**/*$py.class
