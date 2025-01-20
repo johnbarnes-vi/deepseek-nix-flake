@@ -14,7 +14,7 @@
           config.allowUnfree = true;
         };
 
-        pythonEnv = pkgs.python311.withPackages (ps: with ps; [
+        pythonEnv = pkgs.python3.withPackages (ps: with ps; [
           torch-bin
         ]);
 
