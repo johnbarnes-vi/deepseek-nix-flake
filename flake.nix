@@ -17,10 +17,7 @@
             (self: super: {
               pythonPackagesExtensions = super.pythonPackagesExtensions ++ [
                 (python-final: python-prev: {
-                  torch-bin = python-prev.torch-bin;
-                  accelerate = python-prev.accelerate.override {
-                    torch = python-final.torch-bin;
-                  };
+                  torch = python-prev.torch-bin;
                 })
               ];
             })

@@ -11,7 +11,7 @@ def chat():
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         device_map="cuda",
-        torch_dtype=torch.float16
+        torch_dtype=torch.bfloat16
     )
     
     print("\nModel loaded! You can start chatting. Type 'quit' to exit.\n")
@@ -44,7 +44,7 @@ def chat():
             input_ids,
             attention_mask=attention_mask,
             max_new_tokens=2000,
-            temperature=0.9,
+            temperature=0.6,
             do_sample=True,
             pad_token_id=tokenizer.eos_token_id,
             eos_token_id=tokenizer.eos_token_id,
