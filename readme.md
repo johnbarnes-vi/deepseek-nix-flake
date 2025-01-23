@@ -39,14 +39,9 @@ nix develop   # If using nix directly
 
 Once in the development shell, you can:
 
-- Launch basic PyTorch container:
+- Launch basic PyTorch container and mount your src files:
 ```bash
-pytorch
-```
-
-- Mount a workspace directory:
-```bash
-pytorch data  # Mounts ./data to /workspace/mounted
+pytorch src
 ```
 
 ### Persistent Volumes
@@ -83,7 +78,8 @@ The model files should be placed in the `src/DeepSeek-R1-Distill-Qwen-7B` direct
 The repository includes an `inference.py` script for running DeepSeek models. After entering the PyTorch container, you can run:
 
 ```bash
-python /workspace/mounted/inference.py
+cd /workspace/mounted/
+python inference.py
 ```
 
 This will load the DeepSeek model and start an interactive chat session.
