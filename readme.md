@@ -1,41 +1,35 @@
-# PyTorch Development Environment
+# DeepSeek Development Environment
 
-This repository contains a minimal Nix flake configuration for PyTorch development on NixOS.
+This repository contains a Nix flake configuration for running DeepSeek models using NVIDIA's official PyTorch container.
 
 ## Structure
 
-The development environment is intentionally minimal:
+The development environment uses NVIDIA's PyTorch container with persistent volumes for package management and caching:
 
 ```nix
-pythonEnv = pkgs.python311.withPackages (ps: with ps; [
-  torch-bin
-]);
-```
-
-The flake only requires:
-- `allowUnfree = true` for NVIDIA packages
-- Python environment with torch-bin
-
-The shellHook provides immediate verification of the PyTorch installation and CUDA support:
-```nix
-shellHook = ''
-  export PYTHONPATH="$PWD:$PYTHONPATH"
-  echo "Python environment ready"
-  ${pythonEnv}/bin/python -c "import torch; print('PyTorch version:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('CUDA version:', torch.version.cuda if torch.cuda.is_available() else 'N/A')"
+pytorch-launch = pkgs.writeShellScriptBin "pytorch" ''
+  # Launch PyTorch container with persistent volumes and GPU support
 '';
 ```
 
-### Why It's Minimal
+The flake provides:
+- A convenient `pytorch` command for launching the container
+- Persistent volumes for installed packages and cache
+- Automatic GPU device mapping
+- Configurable workspace mounting
 
-Unlike the CUDA C/C++ development environment, this flake doesn't need explicit CUDA toolkit packages because:
-- `torch-bin` is pre-compiled with CUDA support
-- It uses the system's NVIDIA drivers and CUDA runtime
-- No compilation of CUDA code is needed during development
+### Why Docker-based?
+
+This approach offers several advantages:
+- Uses NVIDIA's officially optimized PyTorch container
+- Persistent package installation between sessions
+- Consistent CUDA toolkit and driver compatibility
+- Isolated environment for deep learning development
 
 ## Usage
 
 1. Clone this repository
-2. Ensure your NixOS configuration has proper NVIDIA support
+2. Ensure you have Docker and NVIDIA Container Toolkit installed
 3. Enter the development environment:
 ```bash
 direnv allow  # If using direnv
@@ -43,10 +37,42 @@ direnv allow  # If using direnv
 nix develop   # If using nix directly
 ```
 
-The environment will automatically print PyTorch version and CUDA availability information when you enter it.
+Once in the development shell, you can:
+
+- Launch basic PyTorch container:
+```bash
+pytorch
+```
+
+- Mount a workspace directory:
+```bash
+pytorch data  # Mounts ./data to /workspace/mounted
+```
+
+### Persistent Volumes
+
+The environment creates two persistent Docker volumes:
+- `deepseek-pytorch-packages`: Stores installed Python packages
+- `deepseek-pytorch-cache`: Stores pip and compiler caches
+
+To clear these volumes and start fresh:
+```bash
+docker volume rm deepseek-pytorch-packages deepseek-pytorch-cache
+```
 
 ## Dependencies
 
-- NixOS with proper NVIDIA driver configuration
-- Flakes enabled in Nix
+- NixOS or Nix with flakes enabled
+- Docker with NVIDIA Container Toolkit
+- NVIDIA GPU with compatible drivers
 - direnv (optional but recommended)
+
+## Running DeepSeek Models
+
+The repository includes an `inference.py` script for running DeepSeek models. After entering the PyTorch container, you can run:
+
+```bash
+python /workspace/mounted/inference.py
+```
+
+This will load the DeepSeek model and start an interactive chat session.
