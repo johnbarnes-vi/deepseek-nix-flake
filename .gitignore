@@ -16,3 +16,4 @@
 src/**/__pycache__/
 src/**/*.py[cod]
 src/**/*$py.class
+src/DeepSeek-R1-Distill-Qwen-7B/
