@@ -67,6 +67,17 @@ docker volume rm deepseek-pytorch-packages deepseek-pytorch-cache
 - NVIDIA GPU with compatible drivers
 - direnv (optional but recommended)
 
+## Model Setup
+
+1. Install Git LFS if you haven't already:
+
+2. Clone the DeepSeek model of your choice from huggingface:
+```bash
+git lfs clone https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+```
+
+The model files should be placed in the `src/DeepSeek-R1-Distill-Qwen-7B` directory.
+
 ## Running DeepSeek Models
 
 The repository includes an `inference.py` script for running DeepSeek models. After entering the PyTorch container, you can run:
