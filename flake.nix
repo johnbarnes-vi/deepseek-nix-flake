@@ -63,7 +63,7 @@
             echo "  ${project-name}-pytorch-cache    - Persists pip and compiler caches in /root/.cache"
             echo ""
             echo "Example:"
-            echo "  pytorch data            - Mounts ./data to /workspace/mounted in container"
+            echo "  pytorch src            - Mounts ./src to /workspace/mounted in container"
             echo ""
             echo "Note: Flash Attention and other compiled packages will persist between sessions"
             echo ""
